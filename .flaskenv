@@ -1,1 +1,1 @@
-FLASK_APP=spell-checker.py
+FLASK_APP=app.py
