@@ -8,3 +8,4 @@ WTForms
 flask-migrate
 flask-login
 python-dotenv
+Flask-Env
