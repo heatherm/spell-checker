@@ -19,7 +19,12 @@
 <hr>
 {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <ul>
+        <ul id="success">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <ul id="result">
             {% for message in messages %}
                 <li>{{ message }}</li>
             {% endfor %}
