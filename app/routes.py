@@ -58,4 +58,5 @@ def logout():
 
 @app.route('/spell_check')
 def spell_check():
+    flash('Success spell check')
     return redirect(url_for('index'))

@@ -21,3 +21,8 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
             raise ValidationError('Please use a different username.')
+
+
+class SpellForm(FlaskForm):
+    spell = StringField('spell', validators=[DataRequired()], id="inputtext")
+    submit = SubmitField('Check')
