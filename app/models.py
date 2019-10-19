@@ -20,8 +20,11 @@ class User(UserMixin, db.Model):
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
+    def set_two_factor(self, two_factor):
+        self.two_factor = generate_password_hash(two_factor)
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
     def check_two_factor(self, two_factor):
-        return safe_str_cmp(self.two_factor, two_factor)
+        return check_password_hash(self.two_factor, two_factor)
