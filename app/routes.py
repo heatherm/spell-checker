@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, SpellForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from werkzeug.urls import url_parse
@@ -58,5 +58,8 @@ def logout():
 
 @app.route('/spell_check')
 def spell_check():
-    flash('Success spell check')
-    return redirect(url_for('index'))
+    form = SpellForm()
+    if form.validate_on_submit():
+        flash('Success spell check')
+        return redirect(url_for('index'))
+    return render_template('spell_check.html', title='Spell Check', form=form)
