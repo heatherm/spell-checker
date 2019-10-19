@@ -51,3 +51,8 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
+@app.route('/spell_check')
+def spell_check():
+    return redirect(url_for('index'))
