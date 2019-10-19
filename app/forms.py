@@ -24,5 +24,5 @@ class RegistrationForm(FlaskForm):
 
 
 class SpellForm(FlaskForm):
-    spell = StringField('spell', validators=[DataRequired()])
+    spell = StringField('spell', validators=[DataRequired()], id="inputtext")
     submit = SubmitField('Check')
