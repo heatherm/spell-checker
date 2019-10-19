@@ -4,6 +4,7 @@ from app.forms import LoginForm, RegistrationForm, SpellForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from werkzeug.urls import url_parse
+import subprocess
 
 
 @app.route('/')
@@ -58,10 +59,13 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/spell_check')
+@app.route('/spell_check', methods=['GET', 'POST']  )
 def spell_check():
     form = SpellForm()
     if form.validate_on_submit():
+        original = form.spell.data
+        result = subprocess.call("./a.out", original)
         flash('Success spell check')
         return redirect(url_for('index'))
-    return render_template('spell_check.html', title='Spell Check', form=form)
+    result = "no results"
+    return render_template('spell_check.html', title='Spell Check', form=form, spell=result)
