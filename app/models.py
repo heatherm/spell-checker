@@ -1,5 +1,5 @@
 from app import db, login
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash, safe_str_cmp
 from flask_login import UserMixin
 
 
@@ -11,7 +11,7 @@ def load_user(id):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
+    two_factor = db.Column(db.String(10), index=True, unique=True)
     password_hash = db.Column(db.String(128))
 
     def __repr__(self):
@@ -22,3 +22,6 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def check_two_factor(self, two_factor):
+        return safe_str_cmp(self.two_factor, two_factor)
