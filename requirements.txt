@@ -5,3 +5,4 @@ Flask-WTF
 WTForms
 flask-migrate
 flask-login
+flask_bcrypt

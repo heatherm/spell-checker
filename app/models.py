@@ -1,6 +1,6 @@
-from app import db, login
-from werkzeug.security import generate_password_hash, check_password_hash, safe_str_cmp
+from app import db, login, bcrypt
 from flask_login import UserMixin
+from flask_bcrypt import check_password_hash
 
 
 @login.user_loader
@@ -18,10 +18,10 @@ class User(UserMixin, db.Model):
         return '<User {}>'.format(self.username)
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = bcrypt.generate_password_hash(password)
 
     def set_two_factor(self, two_factor):
-        self.two_factor = generate_password_hash(two_factor)
+        self.two_factor = bcrypt.generate_password_hash(two_factor)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
