@@ -3,19 +3,23 @@
 {% block content %}
     <h1>History</h1>
 
-    <form id="userquery">
-        <input type="text">
+    <form action="" method="post" id="userquery" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(size=32) }}<br>
+            {% for error in form.username.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
     </form>
 
     <table id="numqueries">
-        <tr id="query1">
-            <td></td>
-        </tr>
-        <tr id="query2">
-            <td></td>
-        </tr>
-        <tr id="query3">
-            <td></td>
-        </tr>
+        {% for query in queries %}
+            <tr id="query{{ query.id }}">
+                <a href="/history/query{{ query.id }}">{{ query.data }}</a>
+            </tr>
+        {% endfor %}
     </table>
 {% endblock %}

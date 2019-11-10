@@ -2,9 +2,8 @@
 
 {% block content %}
     <h1>Query</h1>
-    <p id="queryid">{query_id}</p>
-    <p id="username">{username}</p>
-    <p id="queryid">{query_id}</p>
-    <p id="querytext">{query_data}</p>
-    <p id="queryresults">{results}</p>
+    <p id="queryid">{{ query.id }}</p>
+    <p id="username">{{ user.id }}</p>
+    <p id="querytext">{{ query.data }}</p>
+    <p id="queryresults">{{ query.results }}</p>
 {% endblock %}

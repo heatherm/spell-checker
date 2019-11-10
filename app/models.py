@@ -33,6 +33,7 @@ class User(UserMixin, db.Model):
 class Query(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(256), index=True, unique=True)
+    user_id = db.Column(db.Integer, index=True, unique=True)
 
     def __repr__(self):
         return '<Query {}>'.format(self.data)

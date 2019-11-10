@@ -1,8 +1,8 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, SpellForm
+from app.forms import LoginForm, RegistrationForm, SpellForm, HistoryForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, Query
 from werkzeug.urls import url_parse
 import subprocess
 
@@ -64,21 +64,34 @@ def spell_check():
     form = SpellForm()
     if form.validate_on_submit():
         original = form.spell.data
-        result = subprocess.call("./a.out", original)
+        new_query = Query(data=original,
+                          user_id=current_user.id
+                          )
+        db.session.add(new_query)
+        db.session.commit()
+        # result = subprocess.call("./a.out", original)
         flash('Success spell check')
         return redirect(url_for('index'))
     result = "no results"
     return render_template('spell_check.html', title='Spell Check', form=form, spell=result)
 
 
-@app.route('/history', methods=['GET'])
+@app.route('/history', methods=['GET', 'POST'])
 def history():
-    return render_template('history.html', title='History')
+    form = HistoryForm()
+    queries = []
+    if form.validate_on_submit():
+        original = form.username.data
+        user = User.query.filter_by(username=original).first()
+        queries = Query.query.filter_by(user_id=user.id)
+    return render_template('history.html', title='History', form=form, queries=queries)
 
 
-@app.route('/history/query<int:query>', methods=['GET'])
-def query(query):
-    return render_template('query.html', title='Query Show', query=query)
+@app.route('/history/query<int:query_id>', methods=['GET'])
+def query(query_id):
+    result = Query.query.get(query_id)
+    user = User.query.filter_by(id=result.user_id).first()
+    return render_template('query.html', title='Query Show', query=result, user=user)
 
 
 @app.route('/history/login_history', methods=['GET'])
