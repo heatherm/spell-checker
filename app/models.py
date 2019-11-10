@@ -28,3 +28,11 @@ class User(UserMixin, db.Model):
 
     def check_two_factor(self, two_factor):
         return check_password_hash(self.two_factor, two_factor)
+
+
+class Query(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    data = db.Column(db.String(256), index=True, unique=True)
+
+    def __repr__(self):
+        return '<Query {}>'.format(self.data)

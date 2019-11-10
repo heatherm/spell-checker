@@ -59,7 +59,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/spell_check', methods=['GET', 'POST']  )
+@app.route('/spell_check', methods=['GET', 'POST'])
 def spell_check():
     form = SpellForm()
     if form.validate_on_submit():
@@ -69,3 +69,18 @@ def spell_check():
         return redirect(url_for('index'))
     result = "no results"
     return render_template('spell_check.html', title='Spell Check', form=form, spell=result)
+
+
+@app.route('/history', methods=['GET'])
+def history():
+    return render_template('history.html', title='History')
+
+
+@app.route('/history/query<int:query>', methods=['GET'])
+def query(query):
+    return render_template('query.html', title='Query Show', query=query)
+
+
+@app.route('/history/login_history', methods=['GET'])
+def logins():
+    return render_template('login_history.html', title='Login History')
