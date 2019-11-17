@@ -30,10 +30,11 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.two_factor, two_factor)
 
 
-class Query(db.Model):
+class Qqquery(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    data = db.Column(db.String(256), index=True, unique=True)
-    user_id = db.Column(db.Integer, index=True, unique=True)
+    data = db.Column(db.String(256), index=True, unique=False)
+    output = db.Column(db.String(256), index=True, unique=False)
+    user_id = db.Column(db.Integer, index=True, unique=False)
 
     def __repr__(self):
-        return '<Query {}>'.format(self.data)
+        return '<Qqquery {}>'.format(self.id)

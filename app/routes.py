@@ -2,9 +2,10 @@ from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, SpellForm, HistoryForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Query
+from app.models import User, Qqquery
 from werkzeug.urls import url_parse
-import subprocess
+from subprocess import check_output
+import time
 
 
 @app.route('/')
@@ -59,17 +60,24 @@ def logout():
     return redirect(url_for('index'))
 
 
+def get_shell_script_output_using_check_output(spelling):
+    stdout = check_output(['./a.out', './dictionary.txt', spelling]).decode('utf-8')
+    return stdout
+
+
 @app.route('/spell_check', methods=['GET', 'POST'])
+@login_required
 def spell_check():
     form = SpellForm()
     if form.validate_on_submit():
         original = form.spell.data
-        new_query = Query(data=original,
-                          user_id=current_user.id
-                          )
+        result = get_shell_script_output_using_check_output(original)
+        new_query = Qqquery(data=original,
+                            user_id=current_user.id,
+                            output=result
+                            )
         db.session.add(new_query)
         db.session.commit()
-        # result = subprocess.call("./a.out", original)
         flash('Success spell check')
         return redirect(url_for('index'))
     result = "no results"
@@ -77,23 +85,25 @@ def spell_check():
 
 
 @app.route('/history', methods=['GET', 'POST'])
+@login_required
 def history():
     form = HistoryForm()
-    queries = []
+    queries = Qqquery.query.all()
     if form.validate_on_submit():
         original = form.username.data
         user = User.query.filter_by(username=original).first()
-        queries = Query.query.filter_by(user_id=user.id)
+        queries = Qqquery.query.filter_by(user_id=user.id)
     return render_template('history.html', title='History', form=form, queries=queries)
 
 
 @app.route('/history/query<int:query_id>', methods=['GET'])
+@login_required
 def query(query_id):
-    result = Query.query.get(query_id)
-    user = User.query.filter_by(id=result.user_id).first()
-    return render_template('query.html', title='Query Show', query=result, user=user)
+    result = Qqquery.query.filter_by(id=query_id).first()
+    return render_template('qqquery.html', title='Query Show', qqquery=result, user=current_user)
 
 
-@app.route('/history/login_history', methods=['GET'])
+@app.route('/login_history', methods=['GET'])
+@login_required
 def logins():
     return render_template('login_history.html', title='Login History')

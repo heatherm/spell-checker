@@ -17,9 +17,7 @@
 
     <table id="numqueries">
         {% for query in queries %}
-            <tr id="query{{ query.id }}">
-                <a href="/history/query{{ query.id }}">{{ query.data }}</a>
-            </tr>
+            <div>{{ query.id }}. <a href="/history/query{{ query.id }}" id="query{{ query.id }}">{{ query.data }}</a></div>
         {% endfor %}
     </table>
 {% endblock %}
