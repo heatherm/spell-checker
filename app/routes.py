@@ -5,7 +5,6 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Qqquery
 from werkzeug.urls import url_parse
 from subprocess import check_output
-import time
 
 
 @app.route('/')
@@ -88,7 +87,9 @@ def spell_check():
 @login_required
 def history():
     form = HistoryForm()
-    queries = Qqquery.query.all()
+    queries = Qqquery.query.filter_by(user_id=current_user.id)
+    if current_user.admin:
+        queries = Qqquery.query.all()
     if form.validate_on_submit():
         original = form.username.data
         user = User.query.filter_by(username=original).first()
@@ -99,8 +100,13 @@ def history():
 @app.route('/history/query<int:query_id>', methods=['GET'])
 @login_required
 def query(query_id):
-    result = Qqquery.query.filter_by(id=query_id).first()
-    return render_template('qqquery.html', title='Query Show', qqquery=result, user=current_user)
+    result = Qqquery.query.filter_by(id=query_id, user_id=current_user.id).first()
+    if current_user.admin:
+        result = Qqquery.query.filter_by(id=query_id).first()
+    if result:
+        return render_template('qqquery.html', title='Query Show', qqquery=result, user=current_user)
+    else:
+        return redirect(url_for('history'))
 
 
 @app.route('/login_history', methods=['GET'])

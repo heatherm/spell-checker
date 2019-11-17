@@ -10,6 +10,7 @@ def load_user(id):
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    admin = db.Column(db.Boolean, default=False, nullable=False)
     username = db.Column(db.String(64), index=True, unique=True)
     two_factor = db.Column(db.String(10), index=True, unique=True)
     password_hash = db.Column(db.String(128))
@@ -19,6 +20,9 @@ class User(UserMixin, db.Model):
 
     def set_password(self, password):
         self.password_hash = bcrypt.generate_password_hash(password)
+
+    def set_admin(self, admin):
+        self.admin = admin
 
     def set_two_factor(self, two_factor):
         self.two_factor = bcrypt.generate_password_hash(two_factor)
