@@ -6,13 +6,14 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
+app.run(debug=True, host='0.0.0.0')
 app.config.from_object(Config)
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 login = LoginManager(app)
-login.session_protection = "strong"
+login.session_protection = 'strong'
 login.login_view = 'login'
 
 from app import routes, models
