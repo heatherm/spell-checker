@@ -1,0 +1,46 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: spell-checker
+  labels:
+    name: spell-checker
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      name: spell-checker
+  template:
+    metadata:
+      name: spell-checker
+      labels:
+        name: spell-checker
+    spec:
+      containers:
+        - name: spell-checker
+          image: spell-checker/app:v2
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: 256Mi
+            limits:
+              memory: 512Mi
+          env:
+            - name: DEBUG_MODE
+              value: "1"
+            - name: ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: admin-credentials
+                  key: user
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: admin-credentials
+                  key: password
+            - name: ADMIN_MFA
+              valueFrom:
+                secretKeyRef:
+                  name: admin-credentials
+                  key: mfs
