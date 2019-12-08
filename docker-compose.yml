@@ -1,8 +1,9 @@
-version: '2'
+version: '3'
 services:
-  web:
+  spell-checker:
     build: .
     ports:
       - "8080:8080"
     volumes:
       - .:/code
+    image: spell-checker/app:v2
